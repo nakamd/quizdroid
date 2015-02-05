@@ -8,16 +8,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.security.auth.Subject;
 
-public class MainActivity extends ActionBarActivity {
+
+public class HomeActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_home);
 
         ArrayList<Button> subjects = new ArrayList<Button>();
         subjects.add((Button) findViewById(R.id.button));
@@ -29,7 +32,7 @@ public class MainActivity extends ActionBarActivity {
             subject.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent nextActivity = new Intent(MainActivity.this, MainActivity2.class); // cannot use just this cuz this refers to the listener, not the outer this
+                    Intent nextActivity = new Intent(HomeActivity.this, SubjectOverviewActivity.class); // cannot use just this cuz this refers to the listener, not the outer this
                     nextActivity.putExtra("subject", s.getText());
                     // add data to be passed to next activity
                     nextActivity.putExtra("timestamp", new Date().toString());
@@ -46,35 +49,7 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
-    private QuestionMain setQuestions(int id) {
-        switch(id) {
-            case R.id.button:
-                QuestionMain math = new QuestionMain();
-                ArrayList<String> mathW = new ArrayList<String>();
-                mathW.add("5");
-                mathW.add("2");
-                mathW.add("8");
-                math.makeQuestion("What is 2 + 2", "4", mathW);
-                return math;
-            case R.id.button2:
-                QuestionMain physics = new QuestionMain();
-                ArrayList<String> physicsW = new ArrayList<String>();
-                physicsW.add("always at rest");
-                physicsW.add("Equal and opposite reation");
-                physicsW.add("momentum");
-                physics.makeQuestion("What is newton's first law of physics", "once in motion, always in motino", physicsW);
-                return physics;
-            case R.id.button3:
-                QuestionMain marvel = new QuestionMain();
-                ArrayList<String> marvelW = new ArrayList<String>();
-                marvelW.add("Tony Stark");
-                marvelW.add("Chris Evans");
-                marvelW.add("Chris Helmsworth");
-                marvel.makeQuestion("Which actor plays iron man in the advengers", "Robert Downey Jr", marvelW);
-                return marvel;
-        }
-        return null;
-    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

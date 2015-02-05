@@ -12,5 +12,12 @@
     <string name="physics">This is the physics category, we will go through simple physics</string>
     <string name="marvel">This is the marvel characters category, we will go through simple marvel characters</string>
     <string name="title_activity_question">QuestionActivity</string>
+    <string name="title_activity_result">ResultActivity</string>
+    <string name="userAns">You answered: </string>
+    <string name="corAns">The correct answer is: </string>
+    <string name="correct">Correct</string>
+    <string name="incorrect">Incorrect</string>
+    <string name="TotCor">Total Correct: </string>
+    <string name="title_activity_final">FinalActivity</string>
 
 </resources>
