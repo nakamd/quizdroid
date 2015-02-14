@@ -1,5 +1,8 @@
 package nakamd.washington.edu.quizdroid;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -16,21 +19,31 @@ import java.util.Date;
 
 public class SubjectOverviewActivity extends ActionBarActivity {
 
+    private static String subject;
+    private static ArrayList<Question> questionHandler;
+    private static int index;
+    private static FragmentManager fragmentManager;
+    private static int numCorrect;
+    private static String prevAnswer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        index = 0;
+        numCorrect = 0;
         setContentView(R.layout.activity_main_activity2);
         // Get the  Intent that opened this activity
         Intent launchedMe = getIntent();
-        String timestamp = launchedMe.getStringExtra("timestamp");  // get data that was passed from first activity
-        String subjectName = launchedMe.getStringExtra("subject");
+        subject = launchedMe.getStringExtra("subject");
 
-        final ArrayList<Question> questionHandler = setQuestionMain(subjectName);
+        questionHandler = setQuestionMain(subject);
         int questionNum = questionHandler.size();
 
-        setStatic(questionNum, subjectName);
+        fragmentManager = getFragmentManager();
 
-        Button button = (Button) findViewById(R.id.begin);
+        setFirstFragment(questionNum, subject);
+
+        /*Button button = (Button) findViewById(R.id.begin);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -45,9 +58,69 @@ public class SubjectOverviewActivity extends ActionBarActivity {
                 }
                 finish(); // kill this instance self (this activity)
             }
-        });
+        });*/
     }
 
+    private void setFirstFragment(int questionNum, String subjectName) {
+        Fragment fragment = new OverviewFragment();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        fragmentTransaction.replace(R.id.fragment_container, fragment);
+        fragmentTransaction.addToBackStack(null);
+
+        fragmentTransaction.commit();
+    }
+
+    public static void nextQuestion() {
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        Fragment fragment = new QuestionFragment();
+
+        fragmentTransaction.replace(R.id.fragment_container, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+        index++;
+    }
+
+    public static void addNumCorrect() {
+        numCorrect++;
+    }
+
+    public static int getIndex() { return index; }
+
+    public static int getNumCorrect() { return numCorrect; }
+
+    public static Question getQuestion() {
+        return questionHandler.get(index - 1);
+    }
+
+    public static ArrayList<Question> getQuestionHandler() {
+        return questionHandler;
+    }
+
+    public static int handlerSize() { return questionHandler.size(); }
+
+    public static int getNumQuestion() {
+        return questionHandler.size();
+    }
+
+    public static String getSubject() {
+        return subject;
+    }
+
+    public static void setPrevAnswer(String s) {
+        prevAnswer = s;
+    }
+
+    public static String getPrevAnswer() { return prevAnswer; }
+
+    public static void checkAnswer() {
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        Fragment fragment = new AnswerFragment();
+
+        fragmentTransaction.replace(R.id.fragment_container, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

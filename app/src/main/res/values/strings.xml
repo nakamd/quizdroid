@@ -19,5 +19,6 @@
     <string name="incorrect">Incorrect</string>
     <string name="TotCor">Total Correct: </string>
     <string name="title_activity_final">FinalActivity</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
