@@ -1,5 +1,0 @@
-/Users/danielnakamura/AndroidStudioProjects/QuizDroid/app/build/intermediates/classes/debug
-/Users/danielnakamura/AndroidStudioProjects/QuizDroid/app/build/intermediates/pre-dexed/debug/support-annotations-21.0.3-79753a82fce74393b35debf31e8fd57d49b9484e.jar
-/Users/danielnakamura/AndroidStudioProjects/QuizDroid/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.3-56b79b9edd56105d95639802de39803b00b12574.jar
-/Users/danielnakamura/AndroidStudioProjects/QuizDroid/app/build/intermediates/pre-dexed/debug/classes-67245f9ee191a940189dd588db15c7bac8c6f34f.jar
-/Users/danielnakamura/AndroidStudioProjects/QuizDroid/app/build/intermediates/pre-dexed/debug/classes-73061ae515d004259407716b4b3416ba8d83ea40.jar
