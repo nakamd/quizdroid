@@ -71,8 +71,8 @@ public class AnswerFragment extends Fragment {
 
         String prevAnswer = SubjectOverviewActivity.getPrevAnswer();
         final int index = SubjectOverviewActivity.getIndex();
-        Question question = SubjectOverviewActivity.getQuestion();
-        String correctAnswer = question.getAnswer();
+        Quiz question = SubjectOverviewActivity.getQuestion();
+        String correctAnswer = question.getAnswerString();
         int numCorrect = SubjectOverviewActivity.getNumCorrect();
         final int size = SubjectOverviewActivity.handlerSize();
 
@@ -112,17 +112,6 @@ public class AnswerFragment extends Fragment {
                 } else { // go to question fragment
                     SubjectOverviewActivity.nextQuestion();
                 }
-//                nextActivity.putExtra("questionhandler", questions);
-//                nextActivity.putExtra("index", index);
-//                nextActivity.putExtra("numCorrect", numCorrect);
-
-/*
-                if (nextActivity.resolveActivity(getPackageManager()) != null) {
-                    Log.i("ResultActivity", "Entering question Activity");
-                    startActivity(nextActivity); // opens a new activity
-                }
-                finish(); // kill this instance self (this activity)
-*/
             }
         });
 

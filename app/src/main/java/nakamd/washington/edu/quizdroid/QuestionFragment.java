@@ -71,13 +71,13 @@ public class QuestionFragment extends Fragment {
         // Inflate the layout for this fragment
         final View rootView = inflater.inflate(R.layout.fragment_question, container, false);
         Log.i("Question", "made it in Question Fragment");
-        Question question = SubjectOverviewActivity.getQuestion();
+        Quiz question = SubjectOverviewActivity.getQuestion();
         String prompt  = question.getQuestion();
 
         TextView questionPrompt = (TextView) rootView.findViewById(R.id.questionPrompt);
         questionPrompt.setText(prompt);
 
-        setUpRadioButtons(rootView, question.getWrongs(), question.getAnswer());
+        setUpRadioButtons(rootView, question.getChoices(), question.getAnswer());
 
         Button button = (Button) rootView.findViewById(R.id.giveAnswer);
         button.setOnClickListener(new View.OnClickListener() {
@@ -90,7 +90,7 @@ public class QuestionFragment extends Fragment {
                 RadioButton radioButton = (RadioButton) radioGroup.findViewById(radioGroupID);
                 String prevAnswer = radioButton.getText().toString();
                 SubjectOverviewActivity.setPrevAnswer(prevAnswer);
-                String correctAnswer = SubjectOverviewActivity.getQuestion().getAnswer();
+                String correctAnswer = SubjectOverviewActivity.getQuestion().getAnswerString();
                 if (radioButton.getText().equals(SubjectOverviewActivity.getQuestion().getAnswer())) { // if correct
                     SubjectOverviewActivity.addNumCorrect();
                 }
@@ -101,21 +101,23 @@ public class QuestionFragment extends Fragment {
         return rootView;
     }
 
-    private void setUpRadioButtons(final View rootView, ArrayList<String> options, String answer) {
+    private void setUpRadioButtons(final View rootView, ArrayList<String> options, int answer) {
         RadioButton[] buttons = { (RadioButton)rootView.findViewById(R.id.a),
                 (RadioButton)rootView.findViewById(R.id.b), (RadioButton)rootView.findViewById(R.id.c),
                 (RadioButton)rootView.findViewById(R.id.d) };
+/*
 
         int correctOption = (int)(Math.random() * 4);
         int count = 0;
+*/
         for (int i = 0; i < buttons.length; i++) {
-            String text = "";
+/*            String text = "";
             if (i == correctOption) {
                 text = answer;
             } else {
                 text = options.get(count);
                 count++;
-            }
+            }*/
             buttons[i].setOnClickListener(new View.OnClickListener() {
                   @Override
                   public void onClick(View v) {
@@ -123,7 +125,7 @@ public class QuestionFragment extends Fragment {
                       button.setEnabled(true);
                   }
             });
-            buttons[i].setText(text);
+            buttons[i].setText(options.get(i));
         }
     }
 

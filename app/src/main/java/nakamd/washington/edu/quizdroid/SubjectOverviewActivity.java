@@ -20,8 +20,9 @@ import java.util.Date;
 public class SubjectOverviewActivity extends ActionBarActivity {
 
     private static String subject;
-    private static ArrayList<Question> questionHandler;
+    private static QuizRepo subjects;
     private static int index;
+    private static ArrayList<Quiz> questions;
     private static FragmentManager fragmentManager;
     private static int numCorrect;
     private static String prevAnswer;
@@ -36,29 +37,16 @@ public class SubjectOverviewActivity extends ActionBarActivity {
         Intent launchedMe = getIntent();
         subject = launchedMe.getStringExtra("subject");
 
-        questionHandler = setQuestionMain(subject);
-        int questionNum = questionHandler.size();
+        subjects = new QuizRepo();
+        Log.i("subject", subject);
+        questions = subjects.getQuestions(subject);
+        Log.i("Subject", questions.size() + "");
+        int questionNum = questions.size();
 
         fragmentManager = getFragmentManager();
 
         setFirstFragment(questionNum, subject);
 
-        /*Button button = (Button) findViewById(R.id.begin);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent nextActivity = new Intent(SubjectOverviewActivity.this, QuestionActivity.class);
-                nextActivity.putExtra("questionhandler", questionHandler);
-//                nextActivity.putExtra("index", 0); // implicit
-//                nextActivity.putExtra("numCorrect", 0);
-
-                if (nextActivity.resolveActivity(getPackageManager()) != null) {
-                    Log.i("test", "working");
-                    startActivity(nextActivity); // opens a new activity
-                }
-                finish(); // kill this instance self (this activity)
-            }
-        });*/
     }
 
     private void setFirstFragment(int questionNum, String subjectName) {
@@ -89,18 +77,18 @@ public class SubjectOverviewActivity extends ActionBarActivity {
 
     public static int getNumCorrect() { return numCorrect; }
 
-    public static Question getQuestion() {
-        return questionHandler.get(index - 1);
+    public static Quiz getQuestion() {
+        return questions.get(index - 1);
     }
 
-    public static ArrayList<Question> getQuestionHandler() {
-        return questionHandler;
+    public static ArrayList<Quiz> getQuestionHandler() {
+        return questions;
     }
 
-    public static int handlerSize() { return questionHandler.size(); }
+    public static int handlerSize() { return questions.size(); }
 
     public static int getNumQuestion() {
-        return questionHandler.size();
+        return questions.size();
     }
 
     public static String getSubject() {
@@ -144,8 +132,9 @@ public class SubjectOverviewActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private ArrayList<Question> setQuestionMain(String subject) {
-        ArrayList<Question> questions = new ArrayList<Question>();
+/*
+    private ArrayList<Quiz> setQuestionMain(String subject) {
+        ArrayList<Quiz> questions = new ArrayList<Quiz>();
         if (subject.equalsIgnoreCase("math")) {
             questions.add(getMath1());
             questions.add(getMath2());
@@ -253,4 +242,5 @@ public class SubjectOverviewActivity extends ActionBarActivity {
         marvel.add("2013");
         return new Question("What year did Ghost Rider come out", "2007", marvel);
     }
+*/
 }

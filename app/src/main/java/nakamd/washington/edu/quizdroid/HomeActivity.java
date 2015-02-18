@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -26,6 +27,16 @@ public class HomeActivity extends ActionBarActivity {
         subjects.add((Button) findViewById(R.id.button));
         subjects.add((Button) findViewById(R.id.button2));
         subjects.add((Button) findViewById(R.id.button3));
+
+        QuizApp app = (QuizApp) getApplication();
+        TopicRepository tr = app.getRepo();
+        Topic math = tr.getTopic("Math");
+        Topic physics = tr.getTopic("Physics");
+        Topic marvel = tr.getTopic("Marvel Super Heros");
+        ((TextView) findViewById(R.id.description1)).setText(math.getShortDescript());
+        ((TextView) findViewById(R.id.description2)).setText(physics.getShortDescript());
+        ((TextView) findViewById(R.id.description3)).setText(marvel.getShortDescript());
+
 
         for (Button subject : subjects) {
             final Button s = subject;

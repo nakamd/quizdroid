@@ -81,19 +81,6 @@ public class OverviewFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 SubjectOverviewActivity.nextQuestion();
-
-/*
-                Intent nextActivity = new Intent(SubjectOverviewActivity.this, QuestionActivity.class);
-                nextActivity.putExtra("questionhandler", questionHandler);
-//                nextActivity.putExtra("index", 0); // implicit
-//                nextActivity.putExtra("numCorrect", 0);
-
-                if (nextActivity.resolveActivity(getPackageManager()) != null) {
-                    Log.i("test", "working");
-                    startActivity(nextActivity); // opens a new activity
-                }
-                finish(); // kill this instance self (this activity)
-*/
             }
         });
 
