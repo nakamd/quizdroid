@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ import java.util.Date;
 
 public class SubjectOverviewActivity extends ActionBarActivity {
 
-    private static String subject;
+    private static Topic subject;
     private static QuizRepo subjects;
     private static int index;
     private static ArrayList<Quiz> questions;
@@ -35,17 +36,29 @@ public class SubjectOverviewActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main_activity2);
         // Get the  Intent that opened this activity
         Intent launchedMe = getIntent();
-        subject = launchedMe.getStringExtra("subject");
+
+        subject = (Topic) launchedMe.getSerializableExtra("subject");
 
         subjects = new QuizRepo();
-        Log.i("subject", subject);
-        questions = subjects.getQuestions(subject);
+        Log.i("subject", subject.getTitle());
+        questions = subject.getQuestions();
         Log.i("Subject", questions.size() + "");
         int questionNum = questions.size();
 
         fragmentManager = getFragmentManager();
 
-        setFirstFragment(questionNum, subject);
+        setFirstFragment(questionNum, subject.getTitle());
+
+        QuizApp app = (QuizApp) getApplication();
+        TopicRepository tr = app.getRepo();
+        Topic math = tr.getTopic("Math");
+        Topic physics = tr.getTopic("Physics");
+        Topic marvel = tr.getTopic("Marvel Super Heros");
+
+//        ((ImageView) findViewById(R.id.image1)).setImageResource(math.getImage());
+//        ((ImageView) findViewById(R.id.image2)).setImageResource(physics.getImage());
+//        ((ImageView) findViewById(R.id.image3)).setImageResource(marvel.getImage());
+
 
     }
 
@@ -92,7 +105,7 @@ public class SubjectOverviewActivity extends ActionBarActivity {
     }
 
     public static String getSubject() {
-        return subject;
+        return subject.getTitle();
     }
 
     public static void setPrevAnswer(String s) {

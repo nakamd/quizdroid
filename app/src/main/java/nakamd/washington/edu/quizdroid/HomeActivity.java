@@ -3,10 +3,14 @@ package nakamd.washington.edu.quizdroid;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.lang.reflect.Array;
@@ -23,12 +27,35 @@ public class HomeActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        ArrayList<Button> subjects = new ArrayList<Button>();
-        subjects.add((Button) findViewById(R.id.button));
-        subjects.add((Button) findViewById(R.id.button2));
-        subjects.add((Button) findViewById(R.id.button3));
+        ArrayList<String> subjects = new ArrayList<String>();
+        subjects.add("Math");
+        subjects.add("Physics");
+        subjects.add("Marvel Super Heros");
 
         QuizApp app = (QuizApp) getApplication();
+        TopicRepository tr = app.getRepo();
+        ArrayList<Topic> topics = tr.getTopics();
+
+        final ListView lv = (ListView) findViewById(R.id.listView);
+        TopicListAdapter adapter = new TopicListAdapter(this, R.layout.topic_list_row, topics);
+
+        lv.setAdapter(adapter);
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent nextActivity = new Intent(HomeActivity.this, SubjectOverviewActivity.class); // cannot use just this cuz this refers to the listener, not the outer this
+                Topic selected = (Topic) (lv.getItemAtPosition(position));
+                Log.i("test", selected.toString());
+                nextActivity.putExtra("subject", selected);
+                if (nextActivity.resolveActivity(getPackageManager()) != null) {
+                    startActivity(nextActivity); // opens a new activity
+                }
+
+                finish(); // kill this instance self (this activity)
+            }
+        });
+
+/*        QuizApp app = (QuizApp) getApplication();
         TopicRepository tr = app.getRepo();
         Topic math = tr.getTopic("Math");
         Topic physics = tr.getTopic("Physics");
@@ -57,7 +84,7 @@ public class HomeActivity extends ActionBarActivity {
                     finish(); // kill this instance self (this activity)
                 }
             });
-        }
+        }*/
     }
 
 

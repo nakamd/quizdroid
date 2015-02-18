@@ -13,12 +13,26 @@ public class Topic implements Serializable {
     private String shortDescript;
     private String longDescript;
     private ArrayList<Quiz> questions;
+    private int image;
 
     public Topic(String title, String shortDescript, String longDescript, ArrayList<Quiz> questions) {
         this.title = title;
         this.shortDescript = shortDescript;
         this.longDescript = longDescript;
         this.questions = questions;
+        this.image = R.drawable.ic_launcher;
+
+    }
+
+    public Topic(String title, String shortDescript, String longDescript, ArrayList<Quiz> questions, int imageResource) {
+        this(title, shortDescript, longDescript, questions);
+        this.image = imageResource;
+
+    }
+
+
+    public int getImage() {
+        return image;
     }
 
     public String getTitle() { return title; }

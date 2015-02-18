@@ -23,6 +23,15 @@ public class QuizRepo implements TopicRepository {
         return subjects.get(subject).getQuestions();
     }
 
+    public ArrayList<Topic> getTopics() {
+        Collection<Topic> temp = subjects.values();
+        ArrayList<Topic> result = new ArrayList<Topic>();
+        for (Topic t : temp) {
+            result.add(t);
+        }
+        return result;
+    }
+
     public Topic getTopic(String subject) {
         return subjects.get(subject);
     }

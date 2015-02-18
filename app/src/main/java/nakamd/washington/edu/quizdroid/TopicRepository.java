@@ -9,5 +9,5 @@ import java.util.Map;
 public interface TopicRepository {
     public ArrayList<Quiz> getQuestions(String subject);
     public Topic getTopic(String subject);
-
+    public ArrayList<Topic> getTopics();
 }
