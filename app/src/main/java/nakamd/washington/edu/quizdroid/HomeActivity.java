@@ -54,37 +54,6 @@ public class HomeActivity extends ActionBarActivity {
                 finish(); // kill this instance self (this activity)
             }
         });
-
-/*        QuizApp app = (QuizApp) getApplication();
-        TopicRepository tr = app.getRepo();
-        Topic math = tr.getTopic("Math");
-        Topic physics = tr.getTopic("Physics");
-        Topic marvel = tr.getTopic("Marvel Super Heros");
-        ((TextView) findViewById(R.id.description1)).setText(math.getShortDescript());
-        ((TextView) findViewById(R.id.description2)).setText(physics.getShortDescript());
-        ((TextView) findViewById(R.id.description3)).setText(marvel.getShortDescript());
-
-
-        for (Button subject : subjects) {
-            final Button s = subject;
-            subject.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent nextActivity = new Intent(HomeActivity.this, SubjectOverviewActivity.class); // cannot use just this cuz this refers to the listener, not the outer this
-                    nextActivity.putExtra("subject", s.getText());
-                    // add data to be passed to next activity
-                    nextActivity.putExtra("timestamp", new Date().toString());
-
-
-                    if (nextActivity.resolveActivity(getPackageManager()) != null) {
-                        startActivity(nextActivity); // opens a new activity
-                    }
-                    // code still runs asynchronously
-
-                    finish(); // kill this instance self (this activity)
-                }
-            });
-        }*/
     }
 
 
@@ -102,12 +71,10 @@ public class HomeActivity extends ActionBarActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if(item.getItemId() == R.id.action_settings){
+            Intent nextActivity = new Intent(HomeActivity.this, SettingsActivity.class);
+            startActivity(nextActivity);
         }
-
-        return super.onOptionsItemSelected(item);
+        return false;
     }
 }
