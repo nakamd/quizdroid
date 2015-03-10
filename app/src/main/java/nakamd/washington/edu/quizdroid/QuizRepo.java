@@ -1,22 +1,34 @@
 package nakamd.washington.edu.quizdroid;
 
+import android.app.Application;
+import android.util.Log;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
  * Created by danielnakamura on 2/16/15.
  */
-public class QuizRepo implements TopicRepository {
+public class QuizRepo extends Application implements TopicRepository {
     private Map<String, Topic> subjects;
-    //private ArrayList<Question> handler;
+    private static QuizRepo instance;
 
     public QuizRepo() {
-        subjects = new HashMap<String, Topic>();
-        subjects.put("Math", setQuestionMain("math"));
-        subjects.put("Physics", setQuestionMain("physics"));
-        subjects.put("Marvel Super Heros", setQuestionMain("marvel"));
+        if(instance == null) {
+            instance = this;
+        } else {
+            Log.e("QuizApp", "There is already a quizapp built");
+            throw new RuntimeException("Multi App Exception");
+        }
     }
 
     public ArrayList<Quiz> getQuestions(String subject) {
@@ -36,107 +48,79 @@ public class QuizRepo implements TopicRepository {
         return subjects.get(subject);
     }
 
-    private Topic setQuestionMain(String subject) {
-        Topic topic;
-        ArrayList<Quiz> questions = new ArrayList<Quiz>();
-        if (subject.equalsIgnoreCase("math")) {
-            questions.add(getMath1());
-            questions.add(getMath2());
-            questions.add(getMath3());
-            topic = new Topic("Math", "math questions", "This is the math category, we will go through simple arithmetic", questions);
-        } else if (subject.equalsIgnoreCase("physics")) {
-            questions.add(getPhysics1());
-            questions.add(getPhysics2());
-            questions.add(getPhysics3());
-            topic = new Topic("Physics", "physics questions", "This is the physics category, we will go through simple physics", questions);
-        } else {
-            questions.add(getMarvel1());
-            questions.add(getMarvel2());
-            questions.add(getMarvel3());
-            topic = new Topic("Marvel", "marvel questions", "This is the marvel characters category, we will go through simple marvel characters", questions);
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        Log.d("QuizApp", "getFilesDir() = " + getFilesDir().getAbsolutePath());
+        FileInputStream fis = null;
+        try
+        {
+            fis = openFileInput("questions.json");
+            String json = readJSONFile(fis);
+            JSONArray jsonTopics = new JSONArray(json);
+
+            subjects = new HashMap<String, Topic>();
+            for (int i = 0; i < jsonTopics.length(); i++)
+            {
+                JSONObject topic = jsonTopics.getJSONObject(i);
+                subjects.put(loadTopic(topic));
+            }
+        }
+        catch (JSONException jsonEx)
+        {
+            Log.e("QuizApp", "Exception in reading JSON file: " + jsonEx.getMessage());
+            Log.wtf("QuizApp", jsonEx);
+        }
+        catch (IOException ioEx)
+        {
+            Log.e("QuizApp", "Exception in reading JSON file: " + ioEx.getMessage());
+            Log.wtf("QuizApp", ioEx);
+        }
+        finally
+        {
+            try
+            {
+                if (fis != null)
+                    fis.close();
+            }
+            catch (IOException ioEx)
+            {
+                // Not much we can do here....
+            }
+        }
+        DownloadService.setServiceAlarm(this, true);
+    }
+
+    private String readJSONFile(FileInputStream fis) throws IOException
+    {
+        int size = fis.available();
+        byte[] buffer = new byte[size];
+        fis.read(buffer);
+
+        return new String(buffer, "UTF-8");
+    }
+
+    private Topic loadTopic(JSONObject topic) throws JSONException {
+        JSONArray qs = topic.getJSONArray("questions");
+        List<Topic> questions = new ArrayList<Topic>();
+        for (int j=0; j< qs.length(); j++)
+        {
+            Log.d("QuizApp", "Adding " + qs.getJSONObject(j).getString("text"));
+            questions.add(loadQuestion(qs.getJSONObject(j)));
         }
 
-        return topic;
+        return new Topic(topic.getString("title"), topic.getString("desc"), topic.getString("desc"), questions);
     }
 
-    private Quiz getMath1() {
-        ArrayList<String> math = new ArrayList<String>();
-        math.add("4");
-        math.add("5");
-        math.add("2");
-        math.add("8");
-        return new Quiz("What is 2 + 2", 0, math);
+    private Topic loadQuestion(JSONObject q)
+            throws JSONException
+    {
+        return new Topic(q.getString("text"),
+                q.getJSONArray("answers").getString(0),
+                q.getJSONArray("answers").getString(1),
+                q.getJSONArray("answers").getString(2),
+                q.getJSONArray("answers").getString(3),
+                q.getInt("answer"));
     }
 
-    private Quiz getMath2() {
-        ArrayList<String> math = new ArrayList<String>();
-        math.add("5x");
-        math.add("10");
-        math.add("0");
-        math.add("10x");
-        return new Quiz("What is the derivative of 5x^2", 3, math);
-    }
-
-    private Quiz getMath3() {
-        ArrayList<String> math = new ArrayList<String>();
-        math.add("24");
-        math.add("1.4142");
-        math.add("2.1");
-        math.add("0.41");
-        return new Quiz("What is the sqrt of 2", 1, math);
-    }
-
-    private Quiz getPhysics1() {
-        ArrayList<String> physics = new ArrayList<String>();
-        physics.add("0 C");
-        physics.add("90 C");
-        physics.add("100 C");
-        physics.add("-10 C");
-        return new Quiz("At what temperature does water boil", 2, physics);
-    }
-
-    private Quiz getPhysics2() {
-        ArrayList<String> physics = new ArrayList<String>();
-        physics.add("a");
-        physics.add("g");
-        physics.add("s");
-        physics.add("v");
-        return new Quiz("What is the symbol for velocity", 3, physics);
-    }
-
-    private Quiz getPhysics3() {
-        ArrayList<String> physics = new ArrayList<String>();
-        physics.add("-9.81 m/s^2");
-        physics.add("9.81 m/s^2");
-        physics.add("-9.81 m/s");
-        physics.add("9.81 m/s");
-        return new Quiz("What is the acceleration of gravity", 0, physics);
-    }
-
-    private Quiz getMarvel1() {
-        ArrayList<String> marvel = new ArrayList<String>();
-        marvel.add("Hulk");
-        marvel.add("X-Men");
-        marvel.add("Captain America");
-        marvel.add("Spider-Man");
-        return new Quiz("What was the first Marvel movie", 2, marvel);
-    }
-
-    private Quiz getMarvel2() {
-        ArrayList<String> marvel = new ArrayList<String>();
-        marvel.add("The Avengers");
-        marvel.add("Iron Man");
-        marvel.add("Thor");
-        marvel.add("Guardians of the Galaxy");
-        return new Quiz("Which movie has no sequal", 3, marvel);
-    }
-
-    private Quiz getMarvel3() {
-        ArrayList<String> marvel = new ArrayList<String>();
-        marvel.add("2008");
-        marvel.add("2007");
-        marvel.add("2012");
-        marvel.add("2013");
-        return new Quiz("What year did Ghost Rider come out", 1, marvel);
-    }
 }
